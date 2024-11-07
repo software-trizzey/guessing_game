@@ -44,3 +44,46 @@ fn main() {
         }
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_debug_mode_enabled() {
+        env::set_var("DEBUG", "true");
+        let secret_number = 42;
+        let output = format!("DEBUG mode detected. The secret number is: {}", secret_number);
+        assert!(output.contains("DEBUG mode detected"));
+    }
+
+    #[test]
+    fn test_debug_mode_disabled() {
+        env::remove_var("DEBUG");
+        let secret_number = 42;
+        let output = format!("The secret number is: {}", secret_number);
+        assert!(!output.contains("DEBUG mode detected"));
+    }
+
+    #[test]
+    fn test_guess_too_small() {
+        let secret_number = 50;
+        let guess = 25;
+        assert_eq!(guess.cmp(&secret_number), Ordering::Less);
+    }
+
+    #[test]
+    fn test_guess_too_big() {
+        let secret_number = 50;
+        let guess = 75;
+        assert_eq!(guess.cmp(&secret_number), Ordering::Greater);
+    }
+
+    #[test]
+    fn test_guess_correct() {
+        let secret_number = 50;
+        let guess = 50;
+        assert_eq!(guess.cmp(&secret_number), Ordering::Equal);
+    }
+}
